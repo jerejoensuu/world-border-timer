@@ -1,25 +1,21 @@
 {
 	"schemaVersion": 1,
-	"id": "modid",
+	"id": "border-timer",
 	"version": "${version}",
-	"name": "Example mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Border Timer",
+	"description": "A mod that adds a timer for world border events",
 	"authors": [
-		"Me!"
+		"FumeiJoe"
 	],
-	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
-	},
 	"license": "CC0-1.0",
 	"icon": "assets/modid/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.example.ExampleMod"
+			"com.border.MainMod"
 		],
 		"client": [
-			"com.example.ExampleModClient"
+			"com.border.TimerMod"
 		]
 	},
 	"mixins": [

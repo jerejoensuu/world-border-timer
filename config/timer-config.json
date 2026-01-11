@@ -1,0 +1,8 @@
+{
+    "timerAnchorX": 0,
+    "timerAnchorY": 0,
+    "timerPixelOffsetX": 5,
+    "timerPixelOffsetY": 20,
+    "timerFormat": "%02d:%02d",
+    "timerPrefix": "Border here in: "
+}
