@@ -19,17 +19,14 @@ repositories {
 }
 
 loom {
-	// No split source sets. Everything goes in "main".
+	splitEnvironmentSourceSets()
 
-	// splitEnvironmentSourceSets()
-
-	// mods {
-	// 	"modid" {
-	// 		sourceSet sourceSets.main
-	// 		sourceSet sourceSets.client
-	// 	}
-	// }
-
+	mods {
+		"modid" {
+			sourceSet sourceSets.main
+			sourceSet sourceSets.client
+		}
+	}
 }
 
 dependencies {

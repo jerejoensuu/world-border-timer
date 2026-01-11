@@ -8,6 +8,7 @@ import net.minecraft.text.Text;
 
 public class BorderHud {
     public static void register() {
+        System.out.println("[BorderTimer] Registering HUD callback");
         HudRenderCallback.EVENT.register(BorderHud::render);
     }
 
@@ -20,7 +21,6 @@ public class BorderHud {
         if (ms < 0)
             return;
 
-        // Load config values
         Config config = Config.load();
 
         long totalSec = ms / 1000;
@@ -29,13 +29,18 @@ public class BorderHud {
 
         String time = String.format(config.getTimerFormat(), mins, secs);
         Text txt = Text.literal(config.getTimerPrefix() + time);
+
         int windowWidth = client.getWindow().getScaledWidth();
         int windowHeight = client.getWindow().getScaledHeight();
 
-        // Calculate position using config values
+        // New positioning: anchor is [0..1] from top-left
+        // (0,0) = top-left, (0.5,0.5) = center, (1,1) = bottom-right
         int x = (int) (windowWidth * config.getTimerAnchorX()) + config.getTimerPixelOffsetX();
-        int y = windowHeight - ((int) (windowHeight * config.getTimerAnchorY()) + config.getTimerPixelOffsetY());
+        int y = (int) (windowHeight * config.getTimerAnchorY()) + config.getTimerPixelOffsetY();
 
-        context.drawTextWithShadow(client.textRenderer, txt, x, y, 0xFFFFFF);
+        // Opaque white (ARGB). 0xFFFFFF would be fully transparent in 1.21.11+
+        int color = 0xFFFFFFFF;
+
+        context.drawTextWithShadow(client.textRenderer, txt, x, y, color);
     }
 }
