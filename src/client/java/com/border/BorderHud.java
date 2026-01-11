@@ -17,13 +17,13 @@ public class BorderHud {
         if (client.world == null)
             return;
 
-        long ms = TimerMod.computeTimeToImpact();
-        if (ms < 0)
+        TimerMod.ImpactInfo impact = TimerMod.computeImpact();
+        if (impact == null || impact.msUntilEvent < 0)
             return;
 
         Config config = Config.load();
 
-        long totalSec = ms / 1000;
+        long totalSec = impact.msUntilEvent / 1000;
         long mins = totalSec / 60;
         long secs = totalSec % 60;
 
@@ -33,13 +33,17 @@ public class BorderHud {
         int windowWidth = client.getWindow().getScaledWidth();
         int windowHeight = client.getWindow().getScaledHeight();
 
-        // New positioning: anchor is [0..1] from top-left
-        // (0,0) = top-left, (0.5,0.5) = center, (1,1) = bottom-right
-        int x = (int) (windowWidth * config.getTimerAnchorX()) + config.getTimerPixelOffsetX();
-        int y = (int) (windowHeight * config.getTimerAnchorY()) + config.getTimerPixelOffsetY();
+        // Bottom left of the screen
+        int x = config.getTimerPixelOffsetX();
+        int y = windowHeight - client.textRenderer.fontHeight;
 
-        // Opaque white (ARGB). 0xFFFFFF would be fully transparent in 1.21.11+
-        int color = 0xFFFFFFFF;
+        x += config.getTimerPixelOffsetX();
+        y -= config.getTimerPixelOffsetY();
+
+        // Color: green if safe inside final border, red if you will be hit
+        int color = impact.safeInsideFinalBorder
+                ? 0xFF00FF00 // opaque green
+                : 0xFFFF5555; // opaque red-ish
 
         context.drawTextWithShadow(client.textRenderer, txt, x, y, color);
     }

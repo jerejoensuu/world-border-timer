@@ -25,78 +25,96 @@ public class TimerMod implements ClientModInitializer {
         return border;
     }
 
+    public static final class ImpactInfo {
+        public final long msUntilEvent;
+        public final boolean safeInsideFinalBorder;
+
+        public ImpactInfo(long msUntilEvent, boolean safeInsideFinalBorder) {
+            this.msUntilEvent = msUntilEvent;
+            this.safeInsideFinalBorder = safeInsideFinalBorder;
+        }
+    }
+
     /**
-     * Computes milliseconds until the shrinking border reaches the player's
-     * X/Z position. Returns -1 if:
-     * - no border
-     * - not currently shrinking
-     * - player / world missing
-     * - math says "already inside / past border" or nonsense.
+     * New logic:
+     * - If the player will remain inside the final border:
+     * safeInsideFinalBorder = true
+     * msUntilEvent = time until the border reaches its target size
+     * - If the border will hit the player before that:
+     * safeInsideFinalBorder = false
+     * msUntilEvent = time until the edge reaches the player
+     *
+     * Returns null if there is no meaningful timer (no border, not shrinking, etc).
      */
-    public static long computeTimeToImpact() {
+    public static ImpactInfo computeImpact() {
         if (border == null)
-            return -1;
+            return null;
 
         double currentSize = border.getSize();
         double targetSize = border.getSizeLerpTarget();
-        long lerpTicks = border.getSizeLerpTime(); // TICKS remaining
+        long lerpTicks = border.getSizeLerpTime(); // ticks remaining
 
-        // Not shrinking or no remaining interpolation
+        // Not shrinking or nothing left to do
         if (targetSize >= currentSize || lerpTicks <= 0)
-            return -1;
+            return null;
 
         MinecraftClient client = MinecraftClient.getInstance();
         if (client.player == null || client.world == null)
-            return -1;
+            return null;
 
         double cx = border.getCenterX();
         double cz = border.getCenterZ();
         double px = client.player.getX();
         double pz = client.player.getZ();
 
-        // Distance from center along each axis
         double dx = Math.abs(px - cx);
         double dz = Math.abs(pz - cz);
 
-        // Half-sizes now and at the end
         double halfStart = currentSize / 2.0;
         double halfEnd = targetSize / 2.0;
 
-        // If the target half-size is not smaller, something is off
         if (halfEnd >= halfStart)
-            return -1;
+            return null;
 
-        // Total time in seconds for the shrink
         double totalSeconds = lerpTicks / 20.0;
         if (totalSeconds <= 0.0)
-            return -1;
+            return null;
 
-        // Linear shrink rate of half-size per second
         double shrinkPerSecond = (halfStart - halfEnd) / totalSeconds;
         if (shrinkPerSecond <= 0.0)
-            return -1;
+            return null;
 
-        // Time until the border reaches the player's X and Z distances
-        double secX = (halfStart - dx) / shrinkPerSecond;
-        double secZ = (halfStart - dz) / shrinkPerSecond;
+        // Distance from center along the limiting axis
+        double d = Math.max(dx, dz);
 
-        double secUntilImpact = Math.min(secX, secZ);
+        // Already outside the border now or exactly at the edge
+        if (d >= halfStart)
+            return null;
 
-        // If time is negative/NaN/Infinite, treat as "no valid impact"
-        if (secUntilImpact <= 0.0
-                || Double.isNaN(secUntilImpact)
-                || Double.isInfinite(secUntilImpact)) {
-            return -1;
+        boolean safe = d <= halfEnd;
+
+        double secondsUntilEvent;
+        if (safe) {
+            // Border never reaches the player, so show time until it reaches final size
+            secondsUntilEvent = totalSeconds;
+        } else {
+            // Time when halfSize(t) == d
+            secondsUntilEvent = (halfStart - d) / shrinkPerSecond;
         }
 
-        // Convert seconds to milliseconds for the HUD
-        long msUntilImpact = (long) (secUntilImpact * 1000.0);
+        if (secondsUntilEvent <= 0.0
+                || Double.isNaN(secondsUntilEvent)
+                || Double.isInfinite(secondsUntilEvent)) {
+            return null;
+        }
 
-        // Optional debug:
-        // System.out.printf("[BorderTimer] cur=%.2f target=%.2f ticks=%d dx=%.2f
-        // dz=%.2f sec=%.2f ms=%d%n",
-        // currentSize, targetSize, lerpTicks, dx, dz, secUntilImpact, msUntilImpact);
+        long ms = (long) (secondsUntilEvent * 1000.0);
+        return new ImpactInfo(ms, safe);
+    }
 
-        return msUntilImpact;
+    // Backwards compatible helper if you still want just a number
+    public static long computeTimeToImpact() {
+        ImpactInfo info = computeImpact();
+        return (info == null) ? -1L : info.msUntilEvent;
     }
 }
