@@ -28,6 +28,16 @@ Tested to work with Minecraft 1.21.11.
 
 ---
 
+## Downloads
+
+The latest release can be found here:
+
+**https://github.com/jerejoensuu/world-border-timer/releases**
+
+The release page includes the compiled mod `.jar` file required for installation.
+
+---
+
 ## Configuration
 
 The configuration file is created automatically on first launch:
