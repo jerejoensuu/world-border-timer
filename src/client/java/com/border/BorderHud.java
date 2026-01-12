@@ -34,8 +34,8 @@ public class BorderHud {
         int windowHeight = client.getWindow().getScaledHeight();
 
         // Bottom left of the screen
-        int x = config.getTimerPixelOffsetX();
-        int y = windowHeight - client.textRenderer.fontHeight;
+        int x = (int) (config.getTimerAnchorX() * (float) windowWidth);
+        int y = (int) (config.getTimerAnchorY() * (float) windowHeight);
 
         x += config.getTimerPixelOffsetX();
         y -= config.getTimerPixelOffsetY();

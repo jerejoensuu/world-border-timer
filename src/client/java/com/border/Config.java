@@ -10,9 +10,9 @@ public class Config {
     private static Config config;
 
     private float timerAnchorX = 0f;
-    private float timerAnchorY = 0f;
+    private float timerAnchorY = 1f;
     private int timerPixelOffsetX = 5;
-    private int timerPixelOffsetY = 20;
+    private int timerPixelOffsetY = 15;
     private String timerFormat = "%02d:%02d";
     private String timerPrefix = "Border here in: ";
 
