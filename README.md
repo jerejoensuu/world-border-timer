@@ -69,3 +69,4 @@ Example (default):
 
 - [ ] Make sure text displays properly in different resolutions
 - [ ] Handle timer when outside of moving barrier
+- [ ] Consider separating testing tool from mod code
