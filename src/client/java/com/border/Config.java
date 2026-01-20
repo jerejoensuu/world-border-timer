@@ -15,7 +15,8 @@ public class Config {
     private int timerPixelOffsetX = 5;
     private int timerPixelOffsetY = 15;
     private String timerFormat = "%02d:%02d";
-    private String timerPrefix = "Border here in: ";
+    private String timerPrefixDanger = "Border here in: ";
+    private String timerPrefixSafe = "Border stopping in: ";
 
     @SuppressWarnings("null") // Gson#fromJson may return null; this is handled explicitly
     public static Config load() {
@@ -74,7 +75,7 @@ public class Config {
         return timerFormat;
     }
 
-    public String getTimerPrefix() {
-        return timerPrefix;
+    public String getTimerPrefix(boolean isDanger) {
+        return isDanger ? timerPrefixDanger : timerPrefixSafe;
     }
 }

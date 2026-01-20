@@ -49,7 +49,7 @@ public class BorderHud {
         long secs = totalSec % 60;
 
         String time = String.format(config.getTimerFormat(), mins, secs);
-        Text txt = Text.literal(config.getTimerPrefix() + time);
+        Text txt = Text.literal(config.getTimerPrefix(!impact.safeInsideFinalBorder) + time);
 
         int windowWidth = client.getWindow().getScaledWidth();
         int windowHeight = client.getWindow().getScaledHeight();
