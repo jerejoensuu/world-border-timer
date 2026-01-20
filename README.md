@@ -24,8 +24,6 @@ This mod is useful for border-shrinking survival servers, minigames, events, and
 3. Download the latest release of **World Border Timer** from the releases page.
 4. Place the `.jar` file in your `mods/` directory.
 
-Tested to work with Minecraft 1.21.11.
-
 ---
 
 ## Downloads
