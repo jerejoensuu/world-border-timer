@@ -7,7 +7,7 @@ version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = "world-border-timer-${project.minecraft_version}"
+	archivesName = "world-border-timer_mc${project.minecraft_version}"
 }
 
 repositories {
