@@ -1,35 +1,19 @@
 package com.border;
 
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-
-import java.util.Objects;
 
 public class BorderHud {
 
-    // Identifier is forced non-null via Objects.requireNonNull, which the null
-    // checker understands
-    private static final Identifier BORDER_TIMER_HUD_ID = Objects.requireNonNull(
-            Identifier.of(TimerMod.MOD_ID, "border_timer_hud"),
-            "Failed to create Identifier for border timer HUD");
-
+    @SuppressWarnings("deprecation") // HudRenderCallback is deprecated in newer versions but needed for 1.21.0-1.21.5
     public static void register() {
-        if (BORDER_TIMER_HUD_ID == null) {
-            throw new IllegalStateException("Failed to create HUD identifier. MOD_ID might be invalid.");
-        }
-
-        HudElementRegistry.attachElementBefore(
-                VanillaHudElements.CHAT,
-                BORDER_TIMER_HUD_ID,
-                BorderHud::render);
+        HudRenderCallback.EVENT.register(BorderHud::onHudRender);
     }
 
-    private static void render(DrawContext context, RenderTickCounter tickCounter) {
+    private static void onHudRender(DrawContext context, RenderTickCounter tickCounter) {
         MinecraftClient client = MinecraftClient.getInstance();
         if (client == null || client.world == null) {
             return;
@@ -59,9 +43,9 @@ public class BorderHud {
         y -= config.getTimerPixelOffsetY();
 
         int color = impact.safeInsideFinalBorder
-                ? 0xFF00FF00 // opaque green
-                : 0xFFFF5555; // opaque red-ish
+                ? 0xFF00FF00
+                : 0xFFFF5555;
 
-        context.drawTextWithShadow(client.textRenderer, txt, x, y, color);
+        context.drawTextWithShadow(client.textRenderer, txt.getString(), x, y, color);
     }
 }

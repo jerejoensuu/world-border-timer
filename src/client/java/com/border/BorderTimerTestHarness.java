@@ -28,6 +28,7 @@ public final class BorderTimerTestHarness {
         ClientTickEvents.END_CLIENT_TICK.register(BorderTimerTestHarness::onTick);
     }
 
+    @SuppressWarnings("null") // client can be null in test harness
     private static void onTick(MinecraftClient client) {
         if (!ENABLED) {
             return;

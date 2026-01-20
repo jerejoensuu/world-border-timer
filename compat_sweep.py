@@ -12,17 +12,17 @@ from pathlib import Path
 MC_VERSIONS = [
     # "1.21.11",
     # "1.21.10",
-    "1.21.9",
-    "1.21.8",
-    "1.21.7",
+    # "1.21.9",
+    # "1.21.8",
+    # "1.21.7",
     "1.21.6",
     # "1.21.5",
-    # "1.21.4",
+    "1.21.4",
     # "1.21.3",
     # "1.21.2",
     # "1.21.1",
     # "1.21",
-    # "1.20.6",
+    "1.20.6",
     # "1.20.5",
     # "1.20.4",
     # "1.20.3",
@@ -65,9 +65,22 @@ LATEST_LOG = GAME_DIR / "logs" / "latest.log"
 
 def find_single_jar(pattern: str) -> Path:
     libs_dir = PROJECT_ROOT / "build" / "libs"
-    matches = sorted(libs_dir.glob(pattern))
+    all_matches = sorted(libs_dir.glob(pattern))
+    # Filter out sources/dev jars etc
+    matches = [
+        p
+        for p in all_matches
+        if not (
+            p.name.endswith("-sources.jar")
+            or p.name.endswith("-dev.jar")
+            or "sources" in p.name
+        )
+    ]
     if not matches:
-        raise SystemExit(f"No jar found matching {pattern} in {libs_dir}")
+        raise SystemExit(
+            f"No non-sources jar found matching {pattern} in {libs_dir}. "
+            f"Found only: {[p.name for p in all_matches]}"
+        )
     matches.sort(key=lambda p: p.stat().st_mtime, reverse=True)
     return matches[0]
 
