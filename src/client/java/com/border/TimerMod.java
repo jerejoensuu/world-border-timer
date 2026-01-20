@@ -15,8 +15,10 @@ public class TimerMod implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        LOGGER.info("[WorldBorderTimer] Client initialization");
         BorderHud.register();
+
+        // Enable compat test harness only when -Dwbt.compatTest=true
+        BorderTimerTestHarness.init();
     }
 
     public static final class ImpactInfo {

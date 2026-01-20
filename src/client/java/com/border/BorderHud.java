@@ -19,8 +19,6 @@ public class BorderHud {
             "Failed to create Identifier for border timer HUD");
 
     public static void register() {
-        TimerMod.LOGGER.info("[WorldBorderTimer] Registering HUD element");
-
         if (BORDER_TIMER_HUD_ID == null) {
             throw new IllegalStateException("Failed to create HUD identifier. MOD_ID might be invalid.");
         }

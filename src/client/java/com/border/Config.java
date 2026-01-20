@@ -46,7 +46,7 @@ public class Config {
             Config loaded = gson.fromJson(json, Config.class);
 
             config = loaded;
-            TimerMod.LOGGER.info("Loaded config from: {}", configPath);
+            // TimerMod.LOGGER.info("Loaded config from: {}", configPath);
             return config;
         } catch (Exception e) {
             TimerMod.LOGGER.error("Error loading config, falling back to defaults", e);
