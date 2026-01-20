@@ -1,6 +1,7 @@
 {
   "Summary": [
-    "Project published on Modrinth"
+    "Project published on Modrinth",
+    "Includes semi-automated version testing tools"
   ],
   "Priority": 60,
   "Link": "https://modrinth.com/mod/world-border-timer"
