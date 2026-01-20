@@ -63,3 +63,9 @@ Example (default):
   "timerFormat": "%02d:%02d",
   "timerPrefix": "Border here in: "
 }
+```
+
+## Development Checklist
+
+- [ ] Make sure text displays properly in different resolutions
+- [ ] Handle timer when outside of moving barrier
