@@ -1,25 +1,25 @@
 {
-  "schemaVersion": 1,
-  "id": "world_border_timer",
-  "version": "${version}",
-  "name": "World Border Timer",
-  "description": "A client-side mod that adds a customizable HUD timer for world border shrink events. Shows the time until the border finishes shrinking if the player is safe, or the time until the border reaches the player if the player will be hit.",
-  "authors": ["FumeiJoe"],
-  "contact": {
-    "homepage": "https://github.com/jerejoensuu/world-border-timer",
-    "sources": "https://github.com/jerejoensuu/world-border-timer",
-    "issues": "https://github.com/jerejoensuu/world-border-timer/issues"
   },
-  "license": "MIT",
-  "icon": "assets/world_border_timer/icon.png",
-  "environment": "client",
-  "entrypoints": {
     "client": ["com.border.TimerMod"]
+  "entrypoints": {
+  "environment": "client",
+  "icon": "assets/world_border_timer/icon.png",
+  "license": "MIT",
   },
-  "depends": {
-    "fabricloader": ">=0.18.2",
-    "minecraft": ">=1.21.6",
-    "java": ">=21",
-    "fabric-api": "*"
-  }
+    "issues": "https://github.com/jerejoensuu/world-border-timer/issues"
+    "sources": "https://github.com/jerejoensuu/world-border-timer",
+    "homepage": "https://github.com/jerejoensuu/world-border-timer",
+  "contact": {
+  "authors": ["FumeiJoe"],
+  "description": "A client-side mod that adds a customizable HUD timer for world border shrink events. Shows the time until the border finishes shrinking if the player is safe, or the time until the border reaches the player if the player will be hit.",
+  "name": "World Border Timer",
+  "version": "${version}",
+  "id": "world_border_timer",
+  "schemaVersion": 1,
+	"depends": {
+		"fabricloader": ">=0.18.5",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
 }
