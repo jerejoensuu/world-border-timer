@@ -2,36 +2,31 @@ package com.border;
 
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 
 import java.util.Objects;
 
 public class BorderHud {
 
-    // Identifier is forced non-null via Objects.requireNonNull, which the null
-    // checker understands
     private static final Identifier BORDER_TIMER_HUD_ID = Objects.requireNonNull(
-            Identifier.of(TimerMod.MOD_ID, "border_timer_hud"),
+            Identifier.fromNamespaceAndPath(TimerMod.MOD_ID, "border_timer_hud"),
             "Failed to create Identifier for border timer HUD");
 
+    @SuppressWarnings("null")
     public static void register() {
-        if (BORDER_TIMER_HUD_ID == null) {
-            throw new IllegalStateException("Failed to create HUD identifier. MOD_ID might be invalid.");
-        }
-
         HudElementRegistry.attachElementBefore(
                 VanillaHudElements.CHAT,
                 BORDER_TIMER_HUD_ID,
                 BorderHud::render);
     }
 
-    private static void render(DrawContext context, RenderTickCounter tickCounter) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null || client.world == null) {
+    private static void render(GuiGraphicsExtractor context, DeltaTracker tickCounter) {
+        Minecraft client = Minecraft.getInstance();
+        if (client == null || client.level == null) {
             return;
         }
 
@@ -47,10 +42,11 @@ public class BorderHud {
         long secs = totalSec % 60;
 
         String time = String.format(config.getTimerFormat(), mins, secs);
-        Text txt = Text.literal(config.getTimerPrefix(!impact.safeInsideFinalBorder) + time);
+        Component txt = Component.literal(
+                config.getTimerPrefix(!impact.safeInsideFinalBorder) + time);
 
-        int windowWidth = client.getWindow().getScaledWidth();
-        int windowHeight = client.getWindow().getScaledHeight();
+        int windowWidth = client.getWindow().getGuiScaledWidth();
+        int windowHeight = client.getWindow().getGuiScaledHeight();
 
         int x = (int) (config.getTimerAnchorX() * (float) windowWidth);
         int y = (int) (config.getTimerAnchorY() * (float) windowHeight);
@@ -58,10 +54,8 @@ public class BorderHud {
         x += config.getTimerPixelOffsetX();
         y -= config.getTimerPixelOffsetY();
 
-        int color = impact.safeInsideFinalBorder
-                ? 0xFF00FF00 // opaque green
-                : 0xFFFF5555; // opaque red-ish
+        int color = impact.safeInsideFinalBorder ? 0xFF00FF00 : 0xFFFF5555;
 
-        context.drawTextWithShadow(client.textRenderer, txt, x, y, color);
+        context.text(client.font, txt, x, y, color);
     }
 }

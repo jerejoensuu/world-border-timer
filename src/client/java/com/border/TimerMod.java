@@ -1,10 +1,10 @@
 package com.border;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.border.WorldBorder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.border.WorldBorder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,26 +43,20 @@ public class TimerMod implements ClientModInitializer {
      * Returns null if there is no meaningful timer (no border, not shrinking, etc).
      */
     public static ImpactInfo computeImpact() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client == null) {
-            return null;
-        }
+        Minecraft client = Minecraft.getInstance();
 
-        ClientWorld world = client.world;
-        PlayerEntity player = client.player;
+        ClientLevel world = client.level;
+        Player player = client.player;
 
         if (world == null || player == null) {
             return null;
         }
 
         WorldBorder border = world.getWorldBorder();
-        if (border == null) {
-            return null;
-        }
 
         double currentSize = border.getSize();
-        double targetSize = border.getSizeLerpTarget();
-        long lerpTicks = border.getSizeLerpTime(); // ticks remaining
+        double targetSize = border.getLerpTarget();
+        long lerpTicks = border.getLerpTime(); // ticks remaining
 
         // Not shrinking or nothing left to do
         if (targetSize >= currentSize || lerpTicks <= 0) {
