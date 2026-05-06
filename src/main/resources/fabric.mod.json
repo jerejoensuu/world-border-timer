@@ -16,10 +16,17 @@
   "entrypoints": {
     "client": ["com.border.TimerMod"]
   },
-  "depends": {
-    "fabricloader": ">=0.18.5",
-    "minecraft": "~26.1",
-    "java": ">=25",
-    "fabric-api": "*"
-  }
+	"mixins": [
+		"modid.mixins.json",
+		{
+			"config": "modid.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~26.1",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
 }
