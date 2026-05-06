@@ -16,13 +16,6 @@
   "entrypoints": {
     "client": ["com.border.TimerMod"]
   },
-	"mixins": [
-		"modid.mixins.json",
-		{
-			"config": "modid.client.mixins.json",
-			"environment": "client"
-		}
-	],
 	"depends": {
 		"fabricloader": ">=0.19.2",
 		"minecraft": "~26.1",
